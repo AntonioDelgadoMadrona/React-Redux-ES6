@@ -1,0 +1,40 @@
+{
+  "customers": [
+    {
+      "id": "25349209N",
+      "dni": "25349209N",
+      "name": "ANTONIO DELGADO",
+      "age": 26,
+      "isDeleteAllow": false
+    },
+    {
+      "id": "25322367B",
+      "dni": "25322367B",
+      "name": "Yolanda Madrona",
+      "age": 51
+    },
+    {
+      "id": "25946879J",
+      "dni": "25946879J",
+      "name": "Irene Delgado",
+      "age": 22
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
