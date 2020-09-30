@@ -9,19 +9,17 @@ import CityInfo from './../CityInfo'
 import Weather from './../Weather'
 import { getCityCode } from './../../utils/utils'
 
+const areEqual = (prev, next) => {
+    console.log(prev);
+    console.log(next);
+};
 
-// li: es un item (según tag html, tiene el role "listitem")
-// renderCityAndCountry se va a convertir en una función que retorna otra función
-const renderCityAndCountry = eventOnClickCity => (cityAndCountry, weather) => {
-    const { city, countryCode, country } = cityAndCountry
-    // const { temperature, state } = weather
-
+const CityListItem = React.memo(function CityListItem({ city, countryCode, country, weather, eventOnClickCity }) {
     return (
         <ListItem
             button
-            key={getCityCode(city, countryCode)} 
             onClick={() => eventOnClickCity(city, countryCode)} >
-            <Grid container 
+            <Grid container
                 justify="center"
                 alignItems="center"
             >
@@ -33,23 +31,32 @@ const renderCityAndCountry = eventOnClickCity => (cityAndCountry, weather) => {
                 <Grid item
                     md={3}
                     xs={12}>
-                    <Weather 
-                        temperature={weather && weather.temperature} 
-                        state={weather && weather.state} /> 
+                    <Weather
+                        temperature={weather && weather.temperature}
+                        state={weather && weather.state} />
                 </Grid>
             </Grid>
         </ListItem>
     )
+}, areEqual)
+
+// li: es un item (según tag html, tiene el role "listitem")
+// renderCityAndCountry se va a convertir en una función que retorna otra función
+const renderCityAndCountry = eventOnClickCity => (cityAndCountry, weather) => {
+    const { city, countryCode } = cityAndCountry
+
+    return <CityListItem key={getCityCode(city, countryCode)}
+        eventOnClickCity={eventOnClickCity}
+        weather={weather}
+        {...cityAndCountry} />
 }
 
 // cities: es un array, y en cada item tiene que tener la ciudad, pero además el country
 // ul: tag html para listas no ordenadas
 const CityList = ({ cities, onClickCity, actions, data }) => {
     const { allWeather } = data
-    const { onSetAllWeather } = actions
+    const { error, setError } = useCityList(cities, allWeather, actions)
 
-    const { error, setError } = useCityList(cities, allWeather, onSetAllWeather)
-    
     return (
         <div>
             {
@@ -57,7 +64,7 @@ const CityList = ({ cities, onClickCity, actions, data }) => {
             }
             <List>
                 {
-                    cities.map(cityAndCountry => renderCityAndCountry(onClickCity)(cityAndCountry, 
+                    cities.map(cityAndCountry => renderCityAndCountry(onClickCity)(cityAndCountry,
                         allWeather[getCityCode(cityAndCountry.city, cityAndCountry.countryCode)]))
                 }
             </List>
@@ -77,4 +84,4 @@ CityList.propTypes = {
     onClickCity: PropTypes.func.isRequired,
 }
 
-export default CityList
+export default React.memo(CityList)
